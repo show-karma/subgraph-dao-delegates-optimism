@@ -1,0 +1,28 @@
+type Organization @entity {
+  id: ID!
+  token: String!
+  delegates: [DelegateOrganization!] @derivedFrom(field: "organization")
+  delegators: [DelegatorOrganization!] @derivedFrom(field: "organization")
+}
+
+type User @entity {
+  id: ID!
+  delegateorganizations: [DelegateOrganization!] @derivedFrom(field: "delegate")
+  delegatororganizations: [DelegatorOrganization!]
+    @derivedFrom(field: "delegator")
+}
+
+type DelegateOrganization @entity {
+  id: ID! # Set to `${user.id}-${organization.id}`
+  delegate: User!
+  organization: Organization!
+  voteBalance: BigInt!
+  firstTokenDelegatedAt: BigInt!
+}
+
+type DelegatorOrganization @entity {
+  id: ID! # Set to `${user.id}-${organization.id}`
+  delegator: User!
+  delegate: User!
+  organization: Organization!
+}
