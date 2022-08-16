@@ -17,7 +17,7 @@ type DelegateOrganization @entity {
   delegate: User!
   organization: Organization!
   voteBalance: BigInt!
-  firstTokenDelegatedAt: BigInt!
+  firstTokenDelegatedAt: BigInt
 }
 
 type DelegatorOrganization @entity {
