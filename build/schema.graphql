@@ -49,8 +49,10 @@ type DelegateChange @entity {
   blockNumber: BigInt!
 }
 
+
 type DelegatingHistory @entity {
   id: String!
+  daoName: String!
   fromDelegate: String
   toDelegate: String
   delegator: String!
