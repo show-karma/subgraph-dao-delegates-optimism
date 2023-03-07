@@ -17,7 +17,7 @@ type DelegateOrganization @entity {
   delegate: User!
   organization: Organization!
   voteBalance: BigInt!
-  firstTokenDelegatedAt: BigInt!
+  firstTokenDelegatedAt: BigInt
 }
 
 type DelegatorOrganization @entity {
@@ -25,4 +25,15 @@ type DelegatorOrganization @entity {
   delegator: User!
   delegate: User!
   organization: Organization!
+}
+
+type DelegateVotingPowerChange @entity {
+  id: ID!
+  tokenAddress: String!
+  delegate: String!
+  previousBalance: BigInt!
+  newBalance: BigInt!
+  blockTimestamp: BigInt!
+  txnHash: String!
+  blockNumber: BigInt!
 }
