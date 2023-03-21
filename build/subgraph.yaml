@@ -23,6 +23,4 @@ dataSources:
           handler: delegateChanged
         - event: DelegateVotesChanged(indexed address,uint256,uint256)
           handler: delegateVotesChanged
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: transfer
       file: OptimismToken/OptimismToken.wasm
