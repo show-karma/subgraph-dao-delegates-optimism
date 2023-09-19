@@ -10,7 +10,7 @@ dataSources:
       abi: OptimismToken
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - DelegateChanged
@@ -24,3 +24,26 @@ dataSources:
         - event: DelegateVotesChanged(indexed address,uint256,uint256)
           handler: delegateVotesChanged
       file: OptimismToken/OptimismToken.wasm
+  - kind: ethereum
+    name: Connext
+    network: optimism
+    source:
+      abi: Connext
+      address: "0x58b9cB810A68a7f3e1E4f8Cb45D1B9B3c79705E8"
+      startBlock: 109102091
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - DelegateChanged
+        - DelegateVotesChanged
+      abis:
+        - name: Connext
+          file: Connext/abis/ConnextABI.json
+      eventHandlers:
+        - event: DelegateChanged(indexed address,indexed address,indexed address)
+          handler: handleDelegateChanged
+        - event: DelegateVotesChanged(indexed address,uint256,uint256)
+          handler: handleDelegateVotesChanged
+      file: Connext/Connext.wasm
