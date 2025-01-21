@@ -8,7 +8,7 @@ import {
   store,
   Bytes,
   BigInt,
-  BigDecimal
+  BigDecimal,
 } from "@graphprotocol/graph-ts";
 
 export class Organization extends Entity {
@@ -23,10 +23,16 @@ export class Organization extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Organization must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Organization must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Organization", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): Organization | null {
+    return changetype<Organization | null>(
+      store.get_in_block("Organization", id),
+    );
   }
 
   static load(id: string): Organization | null {
@@ -59,22 +65,20 @@ export class Organization extends Entity {
     this.set("token", Value.fromString(value));
   }
 
-  get delegates(): Array<string> | null {
-    let value = this.get("delegates");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+  get delegates(): DelegateOrganizationLoader {
+    return new DelegateOrganizationLoader(
+      "Organization",
+      this.get("id")!.toString(),
+      "delegates",
+    );
   }
 
-  get delegators(): Array<string> | null {
-    let value = this.get("delegators");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+  get delegators(): DelegatorOrganizationLoader {
+    return new DelegatorOrganizationLoader(
+      "Organization",
+      this.get("id")!.toString(),
+      "delegators",
+    );
   }
 }
 
@@ -90,10 +94,14 @@ export class User extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type User must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type User must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("User", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): User | null {
+    return changetype<User | null>(store.get_in_block("User", id));
   }
 
   static load(id: string): User | null {
@@ -113,22 +121,20 @@ export class User extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get delegateorganizations(): Array<string> | null {
-    let value = this.get("delegateorganizations");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+  get delegateorganizations(): DelegateOrganizationLoader {
+    return new DelegateOrganizationLoader(
+      "User",
+      this.get("id")!.toString(),
+      "delegateorganizations",
+    );
   }
 
-  get delegatororganizations(): Array<string> | null {
-    let value = this.get("delegatororganizations");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+  get delegatororganizations(): DelegatorOrganizationLoader {
+    return new DelegatorOrganizationLoader(
+      "User",
+      this.get("id")!.toString(),
+      "delegatororganizations",
+    );
   }
 }
 
@@ -144,15 +150,21 @@ export class DelegateOrganization extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type DelegateOrganization must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type DelegateOrganization must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("DelegateOrganization", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): DelegateOrganization | null {
+    return changetype<DelegateOrganization | null>(
+      store.get_in_block("DelegateOrganization", id),
+    );
+  }
+
   static load(id: string): DelegateOrganization | null {
     return changetype<DelegateOrganization | null>(
-      store.get("DelegateOrganization", id)
+      store.get("DelegateOrganization", id),
     );
   }
 
@@ -208,6 +220,40 @@ export class DelegateOrganization extends Entity {
     this.set("voteBalance", Value.fromBigInt(value));
   }
 
+  get voteBalanceV1(): BigInt | null {
+    let value = this.get("voteBalanceV1");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set voteBalanceV1(value: BigInt | null) {
+    if (!value) {
+      this.unset("voteBalanceV1");
+    } else {
+      this.set("voteBalanceV1", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get voteBalanceV2(): BigInt | null {
+    let value = this.get("voteBalanceV2");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set voteBalanceV2(value: BigInt | null) {
+    if (!value) {
+      this.unset("voteBalanceV2");
+    } else {
+      this.set("voteBalanceV2", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
   get firstTokenDelegatedAt(): BigInt | null {
     let value = this.get("firstTokenDelegatedAt");
     if (!value || value.kind == ValueKind.NULL) {
@@ -236,20 +282,26 @@ export class DelegatorOrganization extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save DelegatorOrganization entity without an ID"
+      "Cannot save DelegatorOrganization entity without an ID",
     );
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type DelegatorOrganization must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type DelegatorOrganization must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("DelegatorOrganization", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): DelegatorOrganization | null {
+    return changetype<DelegatorOrganization | null>(
+      store.get_in_block("DelegatorOrganization", id),
+    );
+  }
+
   static load(id: string): DelegatorOrganization | null {
     return changetype<DelegatorOrganization | null>(
-      store.get("DelegatorOrganization", id)
+      store.get("DelegatorOrganization", id),
     );
   }
 
@@ -316,20 +368,26 @@ export class DelegateVotingPowerChange extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save DelegateVotingPowerChange entity without an ID"
+      "Cannot save DelegateVotingPowerChange entity without an ID",
     );
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type DelegateVotingPowerChange must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type DelegateVotingPowerChange must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("DelegateVotingPowerChange", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): DelegateVotingPowerChange | null {
+    return changetype<DelegateVotingPowerChange | null>(
+      store.get_in_block("DelegateVotingPowerChange", id),
+    );
+  }
+
   static load(id: string): DelegateVotingPowerChange | null {
     return changetype<DelegateVotingPowerChange | null>(
-      store.get("DelegateVotingPowerChange", id)
+      store.get("DelegateVotingPowerChange", id),
     );
   }
 
@@ -450,10 +508,16 @@ export class DelegateChange extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type DelegateChange must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type DelegateChange must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("DelegateChange", id.toString(), this);
     }
+  }
+
+  static loadInBlock(id: string): DelegateChange | null {
+    return changetype<DelegateChange | null>(
+      store.get_in_block("DelegateChange", id),
+    );
   }
 
   static load(id: string): DelegateChange | null {
@@ -572,15 +636,21 @@ export class DelegatingHistory extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type DelegatingHistory must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type DelegatingHistory must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("DelegatingHistory", id.toString(), this);
     }
   }
 
+  static loadInBlock(id: string): DelegatingHistory | null {
+    return changetype<DelegatingHistory | null>(
+      store.get_in_block("DelegatingHistory", id),
+    );
+  }
+
   static load(id: string): DelegatingHistory | null {
     return changetype<DelegatingHistory | null>(
-      store.get("DelegatingHistory", id)
+      store.get("DelegatingHistory", id),
     );
   }
 
@@ -657,6 +727,19 @@ export class DelegatingHistory extends Entity {
     this.set("delegator", Value.fromString(value));
   }
 
+  get amount(): BigInt {
+    let value = this.get("amount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
+  }
+
   get timestamp(): BigInt {
     let value = this.get("timestamp");
     if (!value || value.kind == ValueKind.NULL) {
@@ -668,5 +751,54 @@ export class DelegatingHistory extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get contract(): string {
+    let value = this.get("contract");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set contract(value: string) {
+    this.set("contract", Value.fromString(value));
+  }
+}
+
+export class DelegateOrganizationLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): DelegateOrganization[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<DelegateOrganization[]>(value);
+  }
+}
+
+export class DelegatorOrganizationLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): DelegatorOrganization[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<DelegatorOrganization[]>(value);
   }
 }
