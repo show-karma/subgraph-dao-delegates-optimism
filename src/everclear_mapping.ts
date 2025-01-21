@@ -1,5 +1,5 @@
 import {  BigInt } from "@graphprotocol/graph-ts"
-import { DelegateChanged, DelegateVotesChanged } from "../generated/ClearNetwork/NextNetwork"
+import { DelegateChanged, DelegateVotesChanged } from "../generated/ClearToken/ClearToken"
 import { DelegateChange, DelegateVotingPowerChange, DelegatingHistory, DelegatorOrganization, Organization, User } from "../generated/schema"
 import { getDelegateOrganization } from "./shared/getDelegateOrganization"
 import { getFirstTokenDelegatedAt } from "./shared/getFirstTokenDelegatedAt"
