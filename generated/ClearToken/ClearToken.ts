@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class Approval extends ethereum.Event {
@@ -88,6 +88,42 @@ export class DelegateVotesChanged__Params {
   }
 }
 
+export class Initialized extends ethereum.Event {
+  get params(): Initialized__Params {
+    return new Initialized__Params(this);
+  }
+}
+
+export class Initialized__Params {
+  _event: Initialized;
+
+  constructor(event: Initialized) {
+    this._event = event;
+  }
+
+  get version(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+}
+
+export class OwnershipProposed extends ethereum.Event {
+  get params(): OwnershipProposed__Params {
+    return new OwnershipProposed__Params(this);
+  }
+}
+
+export class OwnershipProposed__Params {
+  _event: OwnershipProposed;
+
+  constructor(event: OwnershipProposed) {
+    this._event = event;
+  }
+
+  get proposedOwner(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class OwnershipTransferred extends ethereum.Event {
   get params(): OwnershipTransferred__Params {
     return new OwnershipTransferred__Params(this);
@@ -136,7 +172,7 @@ export class Transfer__Params {
   }
 }
 
-export class OptimismToken__checkpointsResultValue0Struct extends ethereum.Tuple {
+export class ClearToken__checkpointsResultValue0Struct extends ethereum.Tuple {
   get fromBlock(): BigInt {
     return this[0].toBigInt();
   }
@@ -146,16 +182,16 @@ export class OptimismToken__checkpointsResultValue0Struct extends ethereum.Tuple
   }
 }
 
-export class OptimismToken extends ethereum.SmartContract {
-  static bind(address: Address): OptimismToken {
-    return new OptimismToken("OptimismToken", address);
+export class ClearToken extends ethereum.SmartContract {
+  static bind(address: Address): ClearToken {
+    return new ClearToken("ClearToken", address);
   }
 
   DOMAIN_SEPARATOR(): Bytes {
     let result = super.call(
       "DOMAIN_SEPARATOR",
       "DOMAIN_SEPARATOR():(bytes32)",
-      []
+      [],
     );
 
     return result[0].toBytes();
@@ -165,7 +201,7 @@ export class OptimismToken extends ethereum.SmartContract {
     let result = super.tryCall(
       "DOMAIN_SEPARATOR",
       "DOMAIN_SEPARATOR():(bytes32)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -178,7 +214,7 @@ export class OptimismToken extends ethereum.SmartContract {
     let result = super.call(
       "allowance",
       "allowance(address,address):(uint256)",
-      [ethereum.Value.fromAddress(owner), ethereum.Value.fromAddress(spender)]
+      [ethereum.Value.fromAddress(owner), ethereum.Value.fromAddress(spender)],
     );
 
     return result[0].toBigInt();
@@ -188,7 +224,7 @@ export class OptimismToken extends ethereum.SmartContract {
     let result = super.tryCall(
       "allowance",
       "allowance(address,address):(uint256)",
-      [ethereum.Value.fromAddress(owner), ethereum.Value.fromAddress(spender)]
+      [ethereum.Value.fromAddress(owner), ethereum.Value.fromAddress(spender)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -200,7 +236,7 @@ export class OptimismToken extends ethereum.SmartContract {
   approve(spender: Address, amount: BigInt): boolean {
     let result = super.call("approve", "approve(address,uint256):(bool)", [
       ethereum.Value.fromAddress(spender),
-      ethereum.Value.fromUnsignedBigInt(amount)
+      ethereum.Value.fromUnsignedBigInt(amount),
     ]);
 
     return result[0].toBoolean();
@@ -209,7 +245,7 @@ export class OptimismToken extends ethereum.SmartContract {
   try_approve(spender: Address, amount: BigInt): ethereum.CallResult<boolean> {
     let result = super.tryCall("approve", "approve(address,uint256):(bool)", [
       ethereum.Value.fromAddress(spender),
-      ethereum.Value.fromUnsignedBigInt(amount)
+      ethereum.Value.fromUnsignedBigInt(amount),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -220,7 +256,7 @@ export class OptimismToken extends ethereum.SmartContract {
 
   balanceOf(account: Address): BigInt {
     let result = super.call("balanceOf", "balanceOf(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
 
     return result[0].toBigInt();
@@ -228,7 +264,7 @@ export class OptimismToken extends ethereum.SmartContract {
 
   try_balanceOf(account: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("balanceOf", "balanceOf(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -239,42 +275,40 @@ export class OptimismToken extends ethereum.SmartContract {
 
   checkpoints(
     account: Address,
-    pos: BigInt
-  ): OptimismToken__checkpointsResultValue0Struct {
+    pos: BigInt,
+  ): ClearToken__checkpointsResultValue0Struct {
     let result = super.call(
       "checkpoints",
       "checkpoints(address,uint32):((uint32,uint224))",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(pos)
-      ]
+        ethereum.Value.fromUnsignedBigInt(pos),
+      ],
     );
 
-    return changetype<OptimismToken__checkpointsResultValue0Struct>(
-      result[0].toTuple()
+    return changetype<ClearToken__checkpointsResultValue0Struct>(
+      result[0].toTuple(),
     );
   }
 
   try_checkpoints(
     account: Address,
-    pos: BigInt
-  ): ethereum.CallResult<OptimismToken__checkpointsResultValue0Struct> {
+    pos: BigInt,
+  ): ethereum.CallResult<ClearToken__checkpointsResultValue0Struct> {
     let result = super.tryCall(
       "checkpoints",
       "checkpoints(address,uint32):((uint32,uint224))",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(pos)
-      ]
+        ethereum.Value.fromUnsignedBigInt(pos),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      changetype<OptimismToken__checkpointsResultValue0Struct>(
-        value[0].toTuple()
-      )
+      changetype<ClearToken__checkpointsResultValue0Struct>(value[0].toTuple()),
     );
   }
 
@@ -299,8 +333,8 @@ export class OptimismToken extends ethereum.SmartContract {
       "decreaseAllowance(address,uint256):(bool)",
       [
         ethereum.Value.fromAddress(spender),
-        ethereum.Value.fromUnsignedBigInt(subtractedValue)
-      ]
+        ethereum.Value.fromUnsignedBigInt(subtractedValue),
+      ],
     );
 
     return result[0].toBoolean();
@@ -308,15 +342,15 @@ export class OptimismToken extends ethereum.SmartContract {
 
   try_decreaseAllowance(
     spender: Address,
-    subtractedValue: BigInt
+    subtractedValue: BigInt,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "decreaseAllowance",
       "decreaseAllowance(address,uint256):(bool)",
       [
         ethereum.Value.fromAddress(spender),
-        ethereum.Value.fromUnsignedBigInt(subtractedValue)
-      ]
+        ethereum.Value.fromUnsignedBigInt(subtractedValue),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -325,9 +359,24 @@ export class OptimismToken extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
+  delay(): BigInt {
+    let result = super.call("delay", "delay():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_delay(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("delay", "delay():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   delegates(account: Address): Address {
     let result = super.call("delegates", "delegates(address):(address)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
 
     return result[0].toAddress();
@@ -335,7 +384,7 @@ export class OptimismToken extends ethereum.SmartContract {
 
   try_delegates(account: Address): ethereum.CallResult<Address> {
     let result = super.tryCall("delegates", "delegates(address):(address)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -348,7 +397,7 @@ export class OptimismToken extends ethereum.SmartContract {
     let result = super.call(
       "getPastTotalSupply",
       "getPastTotalSupply(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(blockNumber)]
+      [ethereum.Value.fromUnsignedBigInt(blockNumber)],
     );
 
     return result[0].toBigInt();
@@ -358,7 +407,7 @@ export class OptimismToken extends ethereum.SmartContract {
     let result = super.tryCall(
       "getPastTotalSupply",
       "getPastTotalSupply(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(blockNumber)]
+      [ethereum.Value.fromUnsignedBigInt(blockNumber)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -373,8 +422,8 @@ export class OptimismToken extends ethereum.SmartContract {
       "getPastVotes(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(blockNumber)
-      ]
+        ethereum.Value.fromUnsignedBigInt(blockNumber),
+      ],
     );
 
     return result[0].toBigInt();
@@ -382,15 +431,15 @@ export class OptimismToken extends ethereum.SmartContract {
 
   try_getPastVotes(
     account: Address,
-    blockNumber: BigInt
+    blockNumber: BigInt,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getPastVotes",
       "getPastVotes(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(blockNumber)
-      ]
+        ethereum.Value.fromUnsignedBigInt(blockNumber),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -401,7 +450,7 @@ export class OptimismToken extends ethereum.SmartContract {
 
   getVotes(account: Address): BigInt {
     let result = super.call("getVotes", "getVotes(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
 
     return result[0].toBigInt();
@@ -409,7 +458,7 @@ export class OptimismToken extends ethereum.SmartContract {
 
   try_getVotes(account: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("getVotes", "getVotes(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -424,8 +473,8 @@ export class OptimismToken extends ethereum.SmartContract {
       "increaseAllowance(address,uint256):(bool)",
       [
         ethereum.Value.fromAddress(spender),
-        ethereum.Value.fromUnsignedBigInt(addedValue)
-      ]
+        ethereum.Value.fromUnsignedBigInt(addedValue),
+      ],
     );
 
     return result[0].toBoolean();
@@ -433,15 +482,15 @@ export class OptimismToken extends ethereum.SmartContract {
 
   try_increaseAllowance(
     spender: Address,
-    addedValue: BigInt
+    addedValue: BigInt,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "increaseAllowance",
       "increaseAllowance(address,uint256):(bool)",
       [
         ethereum.Value.fromAddress(spender),
-        ethereum.Value.fromUnsignedBigInt(addedValue)
-      ]
+        ethereum.Value.fromUnsignedBigInt(addedValue),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -467,7 +516,7 @@ export class OptimismToken extends ethereum.SmartContract {
 
   nonces(owner: Address): BigInt {
     let result = super.call("nonces", "nonces(address):(uint256)", [
-      ethereum.Value.fromAddress(owner)
+      ethereum.Value.fromAddress(owner),
     ]);
 
     return result[0].toBigInt();
@@ -475,7 +524,7 @@ export class OptimismToken extends ethereum.SmartContract {
 
   try_nonces(owner: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("nonces", "nonces(address):(uint256)", [
-      ethereum.Value.fromAddress(owner)
+      ethereum.Value.fromAddress(owner),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -488,7 +537,7 @@ export class OptimismToken extends ethereum.SmartContract {
     let result = super.call(
       "numCheckpoints",
       "numCheckpoints(address):(uint32)",
-      [ethereum.Value.fromAddress(account)]
+      [ethereum.Value.fromAddress(account)],
     );
 
     return result[0].toBigInt();
@@ -498,7 +547,7 @@ export class OptimismToken extends ethereum.SmartContract {
     let result = super.tryCall(
       "numCheckpoints",
       "numCheckpoints(address):(uint32)",
-      [ethereum.Value.fromAddress(account)]
+      [ethereum.Value.fromAddress(account)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -520,6 +569,59 @@ export class OptimismToken extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  proposed(): Address {
+    let result = super.call("proposed", "proposed():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_proposed(): ethereum.CallResult<Address> {
+    let result = super.tryCall("proposed", "proposed():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  proposedTimestamp(): BigInt {
+    let result = super.call(
+      "proposedTimestamp",
+      "proposedTimestamp():(uint256)",
+      [],
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_proposedTimestamp(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "proposedTimestamp",
+      "proposedTimestamp():(uint256)",
+      [],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  renounced(): boolean {
+    let result = super.call("renounced", "renounced():(bool)", []);
+
+    return result[0].toBoolean();
+  }
+
+  try_renounced(): ethereum.CallResult<boolean> {
+    let result = super.tryCall("renounced", "renounced():(bool)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   symbol(): string {
@@ -555,7 +657,7 @@ export class OptimismToken extends ethereum.SmartContract {
   transfer(to: Address, amount: BigInt): boolean {
     let result = super.call("transfer", "transfer(address,uint256):(bool)", [
       ethereum.Value.fromAddress(to),
-      ethereum.Value.fromUnsignedBigInt(amount)
+      ethereum.Value.fromUnsignedBigInt(amount),
     ]);
 
     return result[0].toBoolean();
@@ -564,7 +666,7 @@ export class OptimismToken extends ethereum.SmartContract {
   try_transfer(to: Address, amount: BigInt): ethereum.CallResult<boolean> {
     let result = super.tryCall("transfer", "transfer(address,uint256):(bool)", [
       ethereum.Value.fromAddress(to),
-      ethereum.Value.fromUnsignedBigInt(amount)
+      ethereum.Value.fromUnsignedBigInt(amount),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -580,8 +682,8 @@ export class OptimismToken extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(from),
         ethereum.Value.fromAddress(to),
-        ethereum.Value.fromUnsignedBigInt(amount)
-      ]
+        ethereum.Value.fromUnsignedBigInt(amount),
+      ],
     );
 
     return result[0].toBoolean();
@@ -590,7 +692,7 @@ export class OptimismToken extends ethereum.SmartContract {
   try_transferFrom(
     from: Address,
     to: Address,
-    amount: BigInt
+    amount: BigInt,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "transferFrom",
@@ -598,8 +700,8 @@ export class OptimismToken extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(from),
         ethereum.Value.fromAddress(to),
-        ethereum.Value.fromUnsignedBigInt(amount)
-      ]
+        ethereum.Value.fromUnsignedBigInt(amount),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -631,6 +733,32 @@ export class ConstructorCall__Outputs {
   _call: ConstructorCall;
 
   constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class AcceptProposedOwnerCall extends ethereum.Call {
+  get inputs(): AcceptProposedOwnerCall__Inputs {
+    return new AcceptProposedOwnerCall__Inputs(this);
+  }
+
+  get outputs(): AcceptProposedOwnerCall__Outputs {
+    return new AcceptProposedOwnerCall__Outputs(this);
+  }
+}
+
+export class AcceptProposedOwnerCall__Inputs {
+  _call: AcceptProposedOwnerCall;
+
+  constructor(call: AcceptProposedOwnerCall) {
+    this._call = call;
+  }
+}
+
+export class AcceptProposedOwnerCall__Outputs {
+  _call: AcceptProposedOwnerCall;
+
+  constructor(call: AcceptProposedOwnerCall) {
     this._call = call;
   }
 }
@@ -893,6 +1021,36 @@ export class IncreaseAllowanceCall__Outputs {
   }
 }
 
+export class InitializeCall extends ethereum.Call {
+  get inputs(): InitializeCall__Inputs {
+    return new InitializeCall__Inputs(this);
+  }
+
+  get outputs(): InitializeCall__Outputs {
+    return new InitializeCall__Outputs(this);
+  }
+}
+
+export class InitializeCall__Inputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
+    this._call = call;
+  }
+
+  get _owner(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class InitializeCall__Outputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
+    this._call = call;
+  }
+}
+
 export class MintCall extends ethereum.Call {
   get inputs(): MintCall__Inputs {
     return new MintCall__Inputs(this);
@@ -977,6 +1135,36 @@ export class PermitCall__Outputs {
   _call: PermitCall;
 
   constructor(call: PermitCall) {
+    this._call = call;
+  }
+}
+
+export class ProposeNewOwnerCall extends ethereum.Call {
+  get inputs(): ProposeNewOwnerCall__Inputs {
+    return new ProposeNewOwnerCall__Inputs(this);
+  }
+
+  get outputs(): ProposeNewOwnerCall__Outputs {
+    return new ProposeNewOwnerCall__Outputs(this);
+  }
+}
+
+export class ProposeNewOwnerCall__Inputs {
+  _call: ProposeNewOwnerCall;
+
+  constructor(call: ProposeNewOwnerCall) {
+    this._call = call;
+  }
+
+  get newlyProposed(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class ProposeNewOwnerCall__Outputs {
+  _call: ProposeNewOwnerCall;
+
+  constructor(call: ProposeNewOwnerCall) {
     this._call = call;
   }
 }
@@ -1084,35 +1272,5 @@ export class TransferFromCall__Outputs {
 
   get value0(): boolean {
     return this._call.outputValues[0].value.toBoolean();
-  }
-}
-
-export class TransferOwnershipCall extends ethereum.Call {
-  get inputs(): TransferOwnershipCall__Inputs {
-    return new TransferOwnershipCall__Inputs(this);
-  }
-
-  get outputs(): TransferOwnershipCall__Outputs {
-    return new TransferOwnershipCall__Outputs(this);
-  }
-}
-
-export class TransferOwnershipCall__Inputs {
-  _call: TransferOwnershipCall;
-
-  constructor(call: TransferOwnershipCall) {
-    this._call = call;
-  }
-
-  get newOwner(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class TransferOwnershipCall__Outputs {
-  _call: TransferOwnershipCall;
-
-  constructor(call: TransferOwnershipCall) {
-    this._call = call;
   }
 }

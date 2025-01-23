@@ -17,6 +17,8 @@ type DelegateOrganization @entity {
   delegate: User!
   organization: Organization!
   voteBalance: BigInt!
+  voteBalanceV1: BigInt
+  voteBalanceV2: BigInt
   firstTokenDelegatedAt: BigInt
 }
 
@@ -38,7 +40,6 @@ type DelegateVotingPowerChange @entity {
   blockNumber: BigInt!
 }
 
-
 type DelegateChange @entity {
   id: ID!
   oldDelegate: String
@@ -49,7 +50,6 @@ type DelegateChange @entity {
   blockNumber: BigInt!
 }
 
-
 type DelegatingHistory @entity {
   id: String!
   daoName: String!
@@ -58,4 +58,5 @@ type DelegatingHistory @entity {
   delegator: String!
   amount: BigInt!
   timestamp: BigInt!
+  contract: String!
 }
