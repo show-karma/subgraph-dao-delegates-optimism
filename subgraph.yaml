@@ -2,6 +2,28 @@ specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
+  - kind: ethereum/contract
+    name: OptimismToken
+    network: optimism
+    source:
+      address: "0x4200000000000000000000000000000000000042"
+      abi: OptimismToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - DelegateChanged
+        - DelegateVotesChanged
+      abis:
+        - name: OptimismToken
+          file: ./abis/OptimismToken.json
+      eventHandlers:
+        - event: DelegateChanged(indexed address,indexed address,indexed address)
+          handler: delegateChanged
+        - event: DelegateVotesChanged(indexed address,uint256,uint256)
+          handler: delegateVotesChanged
+      file: ./src/optimism_mapping.ts
   - kind: ethereum
     name: NextToken
     network: optimism

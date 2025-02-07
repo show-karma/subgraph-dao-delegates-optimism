@@ -6,7 +6,6 @@ import {
 } from "../generated/OptimismToken/OptimismToken";
 import { getDelegateOrganization } from "./shared/getDelegateOrganization";
 import { getFirstTokenDelegatedAt } from "./shared/getFirstTokenDelegatedAt";
-import { BigInt } from "@graphprotocol/graph-ts";
 
 export function delegateChanged(event: DelegateChanged): void {
   let organization = new Organization("optimism");

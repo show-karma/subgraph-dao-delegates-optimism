@@ -58,5 +58,5 @@ type DelegatingHistory @entity {
   delegator: String!
   amount: BigInt!
   timestamp: BigInt!
-  contract: String!
+  contract: String
 }

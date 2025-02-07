@@ -753,17 +753,21 @@ export class DelegatingHistory extends Entity {
     this.set("timestamp", Value.fromBigInt(value));
   }
 
-  get contract(): string {
+  get contract(): string | null {
     let value = this.get("contract");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set contract(value: string) {
-    this.set("contract", Value.fromString(value));
+  set contract(value: string | null) {
+    if (!value) {
+      this.unset("contract");
+    } else {
+      this.set("contract", Value.fromString(<string>value));
+    }
   }
 }
 
